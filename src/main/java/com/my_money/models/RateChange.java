@@ -1,4 +1,4 @@
-package org.example;
+package com.my_money.models;
 
 
 import java.time.Month;
@@ -10,5 +10,13 @@ public class RateChange {
     public RateChange(Month month, float percentage) {
         this.month = month;
         this.percentage = percentage;
+    }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public float getPercentage() {
+        return percentage;
     }
 }
