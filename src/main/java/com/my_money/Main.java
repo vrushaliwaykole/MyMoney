@@ -7,6 +7,7 @@ import com.my_money.validators.CommandValidator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Main {
@@ -14,6 +15,7 @@ public class Main {
         FileInputStream inputStream = new FileInputStream(args[0]);
         Scanner inputScanner = new Scanner(inputStream);
         Portfolio portfolio = null;
+        DecimalFormat format = new DecimalFormat("0.#");
 
         MutualFunds mutualFunds = new MutualFunds();
 
@@ -40,11 +42,15 @@ public class Main {
                     break;
                 case BALANCE:
                     Double[] result = portfolio.getBalanceFor(inputArray[1]);
-                    System.out.println(result[0] + " " + result[1] + " " + result[2]);
+                    System.out.println(format.format(result[0]) + " " + format.format(result[1]) + " " + format.format(result[2]));
                     break;
                 case REBALANCE:
                     result = portfolio.getLastRebalanceAmounts();
-                    System.out.println(result[0] + " " + result[1] + " " + result[2]);
+                    if (result.length == 0) {
+                        System.out.println("CANNOT_REBALANCE");
+                    } else {
+                        System.out.println(format.format(result[0]) + " " + format.format(result[1]) + " " + format.format(result[2]));
+                    }
                     break;
             }
 
