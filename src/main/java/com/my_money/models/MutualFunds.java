@@ -2,6 +2,7 @@ package com.my_money.models;
 
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class MutualFunds extends ArrayList<MutualFund> {
     public MutualFunds() {
@@ -17,12 +18,20 @@ public class MutualFunds extends ArrayList<MutualFund> {
         goldMutualFund().addRateChange(month, Float.parseFloat(goldRateChange));
     }
 
-    public Float getRateChangeFor(Month month, MutualFundType type) {
-        return switch (type) {
-            case EQUITY -> equityMutualFund().getRateChange(month).orElseThrow(() -> new RuntimeException("Cannot get rate change for " + month));
-            case DEBT -> debtMutualFund().getRateChange(month).orElseThrow(() -> new RuntimeException("Cannot get rate change for " + month));
-            case GOLD -> goldMutualFund().getRateChange(month).orElseThrow(() -> new RuntimeException("Cannot get rate change for " + month));
-        };
+    public Optional<Float> getRateChangeFor(Month month, MutualFundType type) {
+        Optional<Float> result = Optional.ofNullable(null);
+        switch (type) {
+            case EQUITY:
+                result = equityMutualFund().getRateChange(month);
+                break;
+            case DEBT:
+                result = debtMutualFund().getRateChange(month);
+                break;
+            case GOLD:
+                result = goldMutualFund().getRateChange(month);
+                break;
+        }
+        return result;
     }
 
     private MutualFund equityMutualFund(){

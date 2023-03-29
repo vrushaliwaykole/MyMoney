@@ -3,6 +3,7 @@ package com.my_money.models;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Portfolio {
@@ -22,11 +23,15 @@ public class Portfolio {
     }
 
     public void applyRateChange(String month, MutualFunds mutualFunds) {
-        Float equityRateChange = mutualFunds.getRateChangeFor(Month.valueOf(month), MutualFundType.EQUITY);
-        Float debtRateChange = mutualFunds.getRateChangeFor(Month.valueOf(month), MutualFundType.DEBT);
-        Float goldRateChange = mutualFunds.getRateChangeFor(Month.valueOf(month), MutualFundType.GOLD);
+        Optional<Float> equityRateChange = mutualFunds.getRateChangeFor(Month.valueOf(month), MutualFundType.EQUITY);
+        Optional<Float> debtRateChange = mutualFunds.getRateChangeFor(Month.valueOf(month), MutualFundType.DEBT);
+        Optional<Float> goldRateChange = mutualFunds.getRateChangeFor(Month.valueOf(month), MutualFundType.GOLD);
 
-        this.investments.applyRateChange(Month.valueOf(month), equityRateChange, debtRateChange, goldRateChange);
+        if(!equityRateChange.isPresent() || !debtRateChange.isPresent() || !goldRateChange.isPresent()) {
+            throw new RuntimeException("Cannot get rate change for " + month);
+        }
+
+        this.investments.applyRateChange(Month.valueOf(month), equityRateChange.get(), debtRateChange.get(), goldRateChange.get());
 
         if(Month.valueOf(month) == Month.JUNE || Month.valueOf(month) == Month.DECEMBER) {
             this.rebalance(month);
@@ -50,10 +55,10 @@ public class Portfolio {
 
     public Double[] getLastRebalanceAmounts() {
         Double[] result = investments.getBalanceFor(Month.DECEMBER);
-        int rebalanceSize = Arrays.stream(result).filter(Objects::nonNull).toList().size();
+        int rebalanceSize = (int) Arrays.stream(result).filter(Objects::nonNull).count();
         if(rebalanceSize != 3) {
             result = investments.getBalanceFor(Month.JUNE);
-            rebalanceSize = Arrays.stream(result).filter(Objects::nonNull).toList().size();
+            rebalanceSize = (int) Arrays.stream(result).filter(Objects::nonNull).count();
             if(rebalanceSize != 3) {
                 return new Double[0];
             }else{

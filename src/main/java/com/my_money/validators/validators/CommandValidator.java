@@ -4,6 +4,7 @@ import com.my_money.models.Command;
 import com.my_money.models.MutualFunds;
 import com.my_money.models.Portfolio;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CommandValidator {
@@ -27,13 +28,13 @@ public class CommandValidator {
     }
 
     private Integer numberOfInputRequired(Command command) {
-        return Map.of(
-                Command.ALLOCATE, 3,
-                Command.SIP, 3,
-                Command.CHANGE, 4,
-                Command.BALANCE, 1,
-                Command.REBALANCE, 0
-        ).get(command);
+        HashMap<Command, Integer> result = new HashMap<>();
+        result.put(Command.ALLOCATE, 3);
+        result.put(Command.SIP, 3);
+        result.put(Command.CHANGE, 4);
+        result.put(Command.BALANCE, 1);
+        result.put(Command.REBALANCE, 0);
+        return result.get(command);
     }
 
     private boolean portfolioRequired(Command command) {
