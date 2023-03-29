@@ -3,7 +3,7 @@ package com.my_money;
 import com.my_money.models.Command;
 import com.my_money.models.MutualFunds;
 import com.my_money.models.Portfolio;
-import com.my_money.validators.validators.CommandValidator;
+import com.my_money.validators.CommandValidator;
 
 import java.io.FileInputStream;
 import java.io.IOException;

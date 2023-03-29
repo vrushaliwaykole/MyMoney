@@ -10,7 +10,7 @@ public class MutualFundInvestment {
     private Double amount;
     private Double sipAmount;
 
-    private List<Balance> balanceSheet = new ArrayList<>();
+    private final List<Balance> balanceSheet = new ArrayList<>();
 
     public MutualFundInvestment(MutualFundType type, Double amount) {
         this.type = type;
@@ -26,18 +26,22 @@ public class MutualFundInvestment {
     }
 
     public void applyRateChange(Month month, Float equityRateChange) {
+        if(this.sipAmount == null){
+            throw new IllegalStateException("Cannot apply rate change as sip amount is not defined");
+        }
+
         if (month == Month.JANUARY) {
             double balance = amount + (amount * equityRateChange / 100);
             balanceSheet.add(new Balance(month, balance));
         } else {
             Balance balance1 = balanceSheet.stream().filter(balance -> balance.getMonth() == Month.of(month.getValue() - 1))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Cannot apply rate change as previous month's rate change not defined"));
+                    .orElseThrow(() -> new IllegalStateException("Cannot apply rate change as previous month's rate change not defined"));
 
             double balanceAndSipAmount = balance1.getAmount() + sipAmount;
 
             double balance = balanceAndSipAmount + (balanceAndSipAmount * equityRateChange / 100);
-            balanceSheet.add(new Balance(month, balance));
+            balanceSheet.add(new Balance(month, Math.floor(balance)));
         }
     }
 

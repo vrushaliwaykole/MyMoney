@@ -2,7 +2,7 @@ package validators;
 
 import com.my_money.models.Command;
 import com.my_money.models.MutualFunds;
-import com.my_money.validators.validators.CommandValidator;
+import com.my_money.validators.CommandValidator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

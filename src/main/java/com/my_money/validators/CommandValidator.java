@@ -1,4 +1,4 @@
-package com.my_money.validators.validators;
+package com.my_money.validators;
 
 import com.my_money.models.Command;
 import com.my_money.models.MutualFunds;
